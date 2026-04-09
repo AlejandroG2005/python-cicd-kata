@@ -23,3 +23,10 @@ jobs:
           context: .
           push: true
           tags: 20055/python-cicd-kata:latest
+
+  deploy:
+    needs: push-to-registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Avisar a Render para actualizar
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
