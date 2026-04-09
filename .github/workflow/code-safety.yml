@@ -1,0 +1,34 @@
+name: Code Safety
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  code-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Instalar dependencias
+        run: uv sync
+
+      - name: 1. Check Linter (Ruff)
+        run: uv run ruff check .
+
+      - name: 2. Check Formatter (Ruff)
+        run: uv run ruff format --check .
+
+      - name: 3. Check Type Safety (Pyright)
+        run: uv run pyright
+
+      - name: 4. Run Unit Tests (Pytest)
+        run: uv run pytest
